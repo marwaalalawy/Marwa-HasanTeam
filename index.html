@@ -4,47 +4,152 @@
 	<title>guessMyGame</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" href="style.css" type="text/css" >
-	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-</head>
-<body>
-	<div class="row" s>
-		<div class="col-md-1"> logo</div>
-	</div>
-	<div class="row">
-		<div class="col-md-8" id="letters">letters</div>
-		<div class="col-md-4">score</div>
-	</div>
-	<div class="row">
-		<div class="col-md-8" >playArea</div>
-		<div class="col-md-4"><img style="height: 200px; width: 300px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Bell_font_awesome.svg/512px-Bell_font_awesome.svg.png"></div>
-	</div>
-	<div class="row">
-		<div class="col-md-6"><img id="start" style="height: 200px; width: 300px" src="http://pinnalla.trafi.fi/game/img/button-start-game.png"></div>
-		<div class="col-md-6"><img style="height: 200px; width: 300px" src="https://blenderbits.files.wordpress.com/2013/03/menu-new-game.png"></div>
-	</div>
+	<link rel="stylesheet" href="countdownCube.css"/>
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>	  
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<style class="inlinestyle">#counter
+	{
+		margin: 10 auto;
+		text-align: center;
+		}</style>
+	</head>
+	<body style="background-color: pink">
+		<div class="row" s>
+			<div class="col-md-1" style='color:pink'> </div>
+		</div>
+		<div class="row">
+			<div class="col-md-8" id="letters" style="display: none"></div>
+			<div class="col-md-4"> 	<div id="counter"></div></div>
+		</div>
+		<div class="row1" height="200px">
+			<div class="col-md-8" id="playArea" style="display: block; border: 3px solid pink; height: 200px" > <input id="inpu1" style ="width: 70px; heigth: 30px; border: 1px solid gray ; float: left ; margin-left: 50px" ></input> <input id="inpu2" 
+				value="" style ="width: 70px; heigth: 30px; border: 1px solid gray ; float: left; margin-left: 50px"></input> <input id="inpu3" style ="width: 70px; heigth: 30px; border: 1px solid gray ; float: left; margin-left: 50px"></input> <input id="inpu4" style ="width: 70px; heigth: 30px; border: 1px solid gray ; float: left; margin-left: 50px"></input></div>
+				<div class="col-md-4"><img id="bell" style="height: 200px; width: 300px; position:relative " src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Bell_font_awesome.svg/512px-Bell_font_awesome.svg.png"></div>
+			</div>
+			<div class="row">
+				<div class="col-md-6"><img id="start" style="height: 200px; width: 300px" src="http://pinnalla.trafi.fi/game/img/button-start-game.png"></div>
+				<div class="col-md-6"><img id="newGame" style="height: 200px; width: 300px" src="http://cdn.mysitemyway.com/etc-mysitemyway/icons/legacy-previews/icons/ultra-glossy-silver-buttons-icons-symbols-shapes/021271-ultra-glossy-silver-button-icon-symbols-shapes-check-mark.png"></div>
+			</div>
+
+			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+			<script type="text/javascript" src="js/underscore.js"></script>	
+			<script src="sound/soundmanager2.js"></script>
+			<script type="text/javascript" src="countdowncube.js"></script>
+
+			<script>
+
+			$("#inpu1").val("");
+			$("#inpu2").val("");
+			$("#inpu3").val("");
+			$("#inpu4").val("");
+
+			soundManager.setup({
+				url: 'sound/swf/',
+				preferFlash: false,
+				onready: function() {},
+				defaultOptions: {
+    // set global default volume for all sound objects
+    
+}
 
 
-<script type="text/javascript" src="js/underscore.js"></script>	
-<script src="sound/soundmanager2.js"></script>
+});
+
+			function bellLeft() {
+				$("#bell").animate({left: "-=50",top :"+=20"}, 1000, "swing", bellLeft2);
+			}
+			function bellRight() {
+				$("#bell").animate({left: "+=50", top :"-=20"}, 1000, "swing", bellLeft);
+			}
+
+			function bellLeft2() {
+				$("#bell").animate({left: "-=50",top :"-=20"}, 1000, "swing", bellRight2);
+			}
+			function bellRight2() {
+				$("#bell").animate({left: "+=50", top :"+=20"}, 1000, "swing", bellRight);
+			}
+			
+			function getRandomColor() {
+				var letters = '0123456789ABCDEF';
+				var color = '#';
+				for (var i = 0; i < 6; i++ ) {
+					color += letters[Math.floor(Math.random() * 16)];
+				}
+				return color;
+			}
+			var tem=[];
+			var orderWordId=[];
+			var orderWord;
+			var orderWordcont;
+			var words= ["game", "park", "play", "hell", "shot", "rose", "moon"];
+			$('#start').on('click', function(){
+				var bellV=setTimeout(bellFun,30000);
+				var obj={};
+				$("#inpu1").val("");
+				$("#inpu2").val("");
+				$("#inpu3").val("");
+				$("#inpu4").val("");
+				$('#letters').css({'display': 'none'})
+				$('#letters').children().remove();
+				orderWord= words[Math.floor(Math.random() * (words.length-1))].split("");
+				var word = _.shuffle(orderWord);
+				var letterContainer=$("<div></div>");
+				letterContainer.css({'align':'center', 'height':'200px'});
+				letterContainer.addClass("letterContainer");
+				orderWordcont= $("<div></div>");
+				orderWordcont.css({'align':'center'});
+				orderWordcont.addClass("orderWordcont");
+				$("#letters").append(letterContainer);
+				$('#playArea').append(orderWordcont);
+				for(var i=0; i<word.length; i++){
+					var x = $("<div></div>");
+					x.text(word[i]);
+					x.addClass("letterContainer")
+					x.attr('id', word[i]);
+					tem.push("#" + word[i]);
+					x.css({'width': '40px', 'height':'40px', 'color':'black' , 'float':'left', 'border': '1px solid transparent','margin-left': '35px', 'text-align':'center', 'background-color': getRandomColor(), 'border-radius': '5px', 'font-size': '20px', 'font-family':'cursive'})
+					letterContainer.append(x);
+				}
+				$('#letters').css({'display': 'block'});
+				$('#playArea').css({'display': 'block'});
+				var t = new Date();
+				t.setSeconds(t.getSeconds() + 30);
+				$('#counter').countdownCube( {
+					target: t,
+					cubeSize: 50,
+					background: 'rgba( 255, 150, 150, 0.8 )',
+					color: 'white',
+				} );
+				
+			});
+
+function bellFun(){
+	soundManager.createSound({
+		url: 'sound/bell.mp3',
+		autoLoad: true,
+		autoPlay: false,
+		volume: 100,
+		loops: 3
+		
+	}).play();
+	bellRight();
+	$("#newGame").removeAttr("onclick")    	
+}
+
+var draggableId;
+$(document).delegate(tem.join(",")  , "click", function(event) {
 	
-	<script>
-	
-
-	var words= ["game", "letter", "garden", "computer", "screen", "congratulation"];
-	$("#start").click(function(){
-		var word = _.shuffle(words[Math.floor(Math.random() * (words.length-1))].split(""));
-		var letterContainer=$("<div></div>")
-		$("#letters").append(letterContainer);
-		for(var i=0; i<word.length; i++){
-			var x = $("<div></div>");
-			x.css({'width': '25px', 'height':'25px', 'color':'pink', 'border-style':'solid' , 'float':'left'})
-			letterContainer.append(x);
-		}
+	$( function() {
+		$( tem.join(",") ).draggable();
+		$( "#playArea").droppable("instance");
 	});
+});
 
-
-
-	</script>
-
+$("#newGame").click(function(event){
+	if(inpu1.value === orderWord[0] && inpu2.value === orderWord[1] && inpu3.value === orderWord[2] && inpu4.value === orderWord[3]){
+		alert("you guess the word");}
+		alert("u are a loser, screw u ");
+	})
+</script>
 </body>
 </html>
